@@ -88,7 +88,7 @@ class ServerThread(threading.Thread):
     def run(self):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        asyncio.async(self._startEventLoop())
+        asyncio.ensure_future(self._startEventLoop())
         loop.run_forever()
 
     @asyncio.coroutine
