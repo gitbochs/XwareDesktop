@@ -106,7 +106,7 @@ class ServerHttpProtocol(aiohttp.StreamProtocol):
             sock = transport.get_extra_info('socket')
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 
-        self._request_handler = asyncio.async(self.start(), loop=self._loop)
+        self._request_handler = asyncio.ensure_future(self.start(), loop=self._loop)
 
         # start slow request timer
         if self._timeout:
