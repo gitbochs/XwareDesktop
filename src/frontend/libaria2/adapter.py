@@ -195,7 +195,7 @@ class Aria2Adapter(QObject):
         yield from self._ws.send(payload)
 
     def _callFromExternal(self, callable_: _Callable):
-        self._loop.call_soon_threadsafe(asyncio.async, self._call(callable_))
+        self._loop.call_soon_threadsafe(asyncio.ensure_future, self._call(callable_))
 
     def do_createTask(self, creation: TaskCreation) -> (bool, str):
         url = [creation.url]
