@@ -136,7 +136,7 @@ def request(method, url, *,
 
             url = urllib.parse.urldefrag(r_url)[0]
             if url:
-                yield from asyncio.async(resp.release(), loop=loop)
+                yield from asyncio.ensure_future(resp.release(), loop=loop)
                 continue
 
         break
@@ -509,7 +509,7 @@ class ClientRequest:
                            for k, value in self.headers.items(getall=True))))
         request.send_headers()
 
-        self._writer = asyncio.async(
+        self._writer = asyncio.ensure_future(
             self.write_bytes(request, reader), loop=self.loop)
 
         self.response = self.response_class(
