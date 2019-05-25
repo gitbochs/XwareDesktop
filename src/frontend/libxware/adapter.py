@@ -232,7 +232,7 @@ class XwareAdapter(QObject):
                 assert self.useXwared
                 curried = partial(callXwared, self)
                 clientMethodName = name[len("daemon_"):]
-                asyncio.async(curried(clientMethodName, args))
+                asyncio.ensure_future(curried(clientMethodName, args))
             setattr(self, name, method)
             return method
         raise AttributeError("XwareAdapter doesn't have a {name}.".format(**locals()))
