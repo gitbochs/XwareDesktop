@@ -155,7 +155,7 @@ class XwareAdapter(QObject):
         asyncio.events.set_event_loop(self._loop)
         self._xwareClient = XwareClient()
         self.setClientOptions(clientInitOptions or dict())
-        asyncio.async(self.main())
+        asyncio.ensure_future(self.main())
         self._loop.run_forever()
 
     @pyqtProperty(str, notify = initialized)
@@ -220,7 +220,7 @@ class XwareAdapter(QObject):
                 clientMethod = getattr(self._xwareClient, name)
                 coro = clientMethod(*args)
                 assert asyncio.iscoroutine(coro)
-                future =asyncio.async(coro)
+                future =asyncio.ensure_future(coro)
                 cb = getattr(self, "_donecb_" + name, None)
                 if cb:
                     cb = partial(cb, *args)
