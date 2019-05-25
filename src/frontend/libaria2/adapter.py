@@ -104,7 +104,7 @@ class Aria2Adapter(QObject):
         self._loop_executor = ThreadPoolExecutor(max_workers = 1)
         self._loop.set_default_executor(self._loop_executor)
         asyncio.events.set_event_loop(self._loop)
-        asyncio.async(self.main())
+        asyncio.ensure_future(self.main())
         self._loop.run_forever()
 
     def updateOptions(self, options):
@@ -129,7 +129,7 @@ class Aria2Adapter(QObject):
 
     @asyncio.coroutine
     def main(self):
-        asyncio.async(self._getMessage())  # It can handle reconnect
+        asyncio.ensure_future(self._getMessage())  # It can handle reconnect
         while True:
             try:
                 self._ws = yield from websockets.client.connect(
@@ -143,10 +143,10 @@ class Aria2Adapter(QObject):
                 if not self._ready():
                     break
 
-                asyncio.async(self._call(_Callable(Aria2Method.GetGlobalStat)))
-                asyncio.async(self._call(_Callable(Aria2Method.TellActive)))
-                asyncio.async(self._call(_Callable(Aria2Method.TellWaiting, 0, 100000)))
-                asyncio.async(self._call(_Callable(Aria2Method.TellStopped, 0, 100000)))
+                asyncio.ensure_future(self._call(_Callable(Aria2Method.GetGlobalStat)))
+                asyncio.ensure_future(self._call(_Callable(Aria2Method.TellActive)))
+                asyncio.ensure_future(self._call(_Callable(Aria2Method.TellWaiting, 0, 100000)))
+                asyncio.ensure_future(self._call(_Callable(Aria2Method.TellStopped, 0, 100000)))
                 yield from asyncio.sleep(1)
 
     @asyncio.coroutine
